@@ -1,0 +1,326 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Plaza Miologi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Metaverse praktikum anatomi otot ekstremitas superior et inferior — FKIK Universitas Mataram">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,500;1,400;1,500;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: layar penuh 3D; HUD tipis di tepi; panel bilik = lembar atlas (gambar kiri, daftar otot kanan). */
+:root {
+  --ground: #eef4ee;      /* kertas daun pucat */
+  --surface: #ffffff;
+  --surface-2: #f5f9f5;
+  --ink: #13271d;         /* hijau-hitam */
+  --muted: #55675c;
+  --line: #d3e0d6;
+  --accent: #b23a2e;      /* merah otot */
+  --leaf: #2f7a4f;        /* hijau kampus */
+  --sup: #1a6f9e;
+  --inf: #b85a28;
+  --intro: #2f855a;
+  --lab: #8a4d8a;
+  --glass: rgba(255, 255, 255, .86);
+  --glass-ink: #13271d;
+  --shadow: 0 10px 30px rgba(19, 39, 29, .18);
+  --f-ui: "Familjen Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-latin: "Spectral", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0e1813; --surface: #15221b; --surface-2: #1a2a21; --ink: #e5eee8; --muted: #9db0a4; --line: #2a3c32;
+    --accent: #e1705f; --leaf: #6cc28f; --sup: #5fb0de; --inf: #e89058; --intro: #6cc28f; --lab: #c792c7;
+    --glass: rgba(18, 30, 24, .86); --glass-ink: #e5eee8; --shadow: 0 10px 30px rgba(0, 0, 0, .45); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0e1813; --surface: #15221b; --surface-2: #1a2a21; --ink: #e5eee8; --muted: #9db0a4; --line: #2a3c32;
+  --accent: #e1705f; --leaf: #6cc28f; --sup: #5fb0de; --inf: #e89058; --intro: #6cc28f; --lab: #c792c7;
+  --glass: rgba(18, 30, 24, .86); --glass-ink: #e5eee8; --shadow: 0 10px 30px rgba(0, 0, 0, .45); color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--ground); color: var(--ink); font-family: var(--f-ui); font-size: 15px; overflow: hidden; }
+* { box-sizing: border-box; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+.latin { font-family: var(--f-latin); font-style: italic; }
+.mono { font-family: var(--f-mono); }
+
+#app { position: relative; height: 100%; width: 100%; overflow: hidden; }
+#stage { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; background: #cfe3ee; }
+
+/* ---------- HUD ---------- */
+.hud-top { position: absolute; top: 0; left: 0; right: 0; display: flex; gap: 10px; align-items: flex-start; justify-content: space-between;
+  padding: 12px var(--gr) 0 var(--gl); pointer-events: none; z-index: 5; }
+.hud-top > * { pointer-events: auto; }
+.brand { background: var(--glass); color: var(--glass-ink); backdrop-filter: blur(8px); border-radius: 12px; padding: 8px 14px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.brand b { font-size: 15px; letter-spacing: .02em; }
+.brand span { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand .zone { color: var(--leaf); font-weight: 600; }
+.tools { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; max-width: 70%; }
+.chip { background: var(--glass); color: var(--glass-ink); backdrop-filter: blur(8px); border: 1px solid transparent; border-radius: 999px; padding: 7px 12px;
+  font-size: 13px; font-weight: 600; box-shadow: var(--shadow); display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.chip:hover { border-color: var(--leaf); }
+.chip kbd { font-family: var(--f-mono); font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+.chip .n { font-family: var(--f-mono); font-variant-numeric: tabular-nums; color: var(--leaf); }
+.chip.accent { background: var(--leaf); color: #fff; }
+.chip.accent .n { color: #fff; }
+
+#prompt { position: absolute; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 5;
+  background: var(--glass); color: var(--glass-ink); backdrop-filter: blur(8px); border-radius: 14px; padding: 10px 12px 10px 16px; box-shadow: var(--shadow);
+  display: flex; gap: 12px; align-items: center; max-width: calc(100% - 32px); }
+#prompt .code { font-family: var(--f-mono); font-size: 12px; color: #fff; border-radius: 6px; padding: 2px 7px; }
+#prompt .t { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#prompt button { background: var(--ink); color: var(--surface); border: 0; border-radius: 10px; padding: 7px 12px; font-weight: 600; white-space: nowrap; }
+
+#mini { position: absolute; left: var(--gl); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: 150px; height: 150px; border-radius: 50%;
+  box-shadow: var(--shadow); z-index: 4; cursor: pointer; background: var(--glass); }
+#tip { position: absolute; z-index: 6; pointer-events: none; background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 600;
+  padding: 4px 8px; border-radius: 6px; transform: translate(12px, 12px); white-space: nowrap; }
+#labels { position: absolute; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
+.tag { position: absolute; transform: translate(-50%, -100%); background: var(--glass); color: var(--glass-ink); font-size: 12px; font-weight: 600;
+  padding: 3px 8px; border-radius: 999px; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.tag i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.bubble { position: absolute; transform: translate(-50%, -100%); background: var(--surface); color: var(--ink); font-size: 13px; padding: 8px 11px; border-radius: 12px;
+  max-width: 230px; box-shadow: var(--shadow); line-height: 1.35; }
+.bubble::after { content: ""; position: absolute; left: 50%; bottom: -6px; margin-left: -6px; border: 6px solid transparent; border-bottom: 0; border-top-color: var(--surface); }
+
+#joy { position: absolute; left: var(--gl); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); width: 120px; height: 120px; border-radius: 50%;
+  background: var(--glass); box-shadow: var(--shadow); z-index: 5; touch-action: none; }
+#joy::after { content: ""; position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: var(--leaf);
+  transform: translate(var(--jx, 0px), var(--jy, 0px)); opacity: .9; }
+
+/* ---------- intro ---------- */
+#intro { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: 16px var(--gr) 16px var(--gl);
+  background: linear-gradient(180deg, rgba(14, 40, 28, .25), rgba(14, 40, 28, .55)); overflow-y: auto; }
+.card { background: var(--surface); color: var(--ink); border-radius: 18px; box-shadow: var(--shadow); width: min(720px, 100%); overflow: hidden; }
+.intro-head { padding: 26px 28px 18px; background: var(--leaf); color: #fff; position: relative; }
+.intro-head small { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; opacity: .9; text-transform: uppercase; }
+.intro-head h1 { margin: 6px 0 4px; font-size: clamp(30px, 6vw, 46px); line-height: 1.02; letter-spacing: -.01em; text-wrap: balance; }
+.intro-head h1 em { font-family: var(--f-latin); font-weight: 500; }
+.intro-head p { margin: 0; max-width: 54ch; opacity: .92; line-height: 1.45; }
+.intro-body { padding: 20px 28px 24px; display: grid; gap: 18px; }
+.namebar { display: flex; gap: 10px; flex-wrap: wrap; }
+.namebar input { flex: 1 1 220px; min-width: 0; border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 12px; padding: 12px 14px; }
+.btn { border: 0; border-radius: 12px; padding: 12px 18px; font-weight: 700; background: var(--accent); color: #fff; }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+.btn.dark { background: var(--ink); color: var(--surface); }
+.btn:disabled { opacity: .5; cursor: progress; }
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.legend div { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; line-height: 1.4; min-width: 0; }
+.legend b { display: block; font-size: 13px; margin-bottom: 2px; }
+.legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: 0; }
+.keys { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); }
+.keys kbd { font-family: var(--f-mono); font-size: 12px; color: var(--ink); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; }
+.loadbar { height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.loadbar i { display: block; height: 100%; width: 0; background: var(--leaf); transition: width .3s; }
+.fine { font-size: 12px; color: var(--muted); line-height: 1.45; margin: 0; }
+
+/* ---------- modal / sheet ---------- */
+#modal { position: absolute; inset: 0; z-index: 15; display: grid; place-items: center; padding: 12px var(--gr) calc(12px + env(safe-area-inset-bottom, 0px)) var(--gl);
+  background: rgba(10, 25, 18, .45); }
+.sheet { background: var(--surface); color: var(--ink); border-radius: 18px; box-shadow: var(--shadow); width: min(1180px, 100%); height: min(760px, 100%);
+  display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+.sheet-head { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px 12px 20px; border-bottom: 1px solid var(--line); }
+.sheet-head .code { font-family: var(--f-mono); font-weight: 500; color: #fff; border-radius: 8px; padding: 4px 9px; font-size: 13px; margin-top: 3px; }
+.sheet-head h2 { margin: 0; font-size: clamp(19px, 2.6vw, 25px); line-height: 1.15; text-wrap: balance; }
+.sheet-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.sheet-head .grow { flex: 1; min-width: 0; }
+.x { border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; width: 38px; height: 38px; font-size: 20px; line-height: 1; flex: none; }
+.sheet-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); min-height: 0; }
+.sheet-foot { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 10px 18px; border-top: 1px solid var(--line); background: var(--surface-2); }
+.sheet-foot .sp { flex: 1; }
+.sbtn { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 12px; font-weight: 600; font-size: 13px; }
+.sbtn.pri { background: var(--leaf); color: #fff; border-color: transparent; }
+.sbtn.red { background: var(--accent); color: #fff; border-color: transparent; }
+
+.viewer { display: grid; grid-template-rows: 1fr auto; min-height: 0; background: var(--surface-2); border-right: 1px solid var(--line); }
+.vmain { position: relative; min-height: 0; display: grid; place-items: center; overflow: auto; padding: 12px; }
+.vmain img, .vmain .svgwrap { max-width: 100%; max-height: 100%; object-fit: contain; display: block; border-radius: 8px; background: #fff; }
+.vmain.zoom { place-items: start; }
+.vmain.zoom img { max-width: none; max-height: none; width: 180%; cursor: zoom-out; }
+.vmain img { cursor: zoom-in; }
+.vmain .svgwrap { position: absolute; inset: 12px; width: auto; height: auto; max-width: none; max-height: none; background: transparent; }
+.vmain .svgwrap svg { width: 100%; height: 100%; }
+.vnav { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--glass); color: var(--glass-ink); box-shadow: var(--shadow); font-size: 18px; }
+.vnav.l { left: 10px; } .vnav.r { right: 10px; }
+.vcap { position: absolute; left: 12px; bottom: 12px; background: var(--glass); color: var(--glass-ink); font-size: 12px; padding: 4px 9px; border-radius: 8px; font-weight: 600; }
+.thumbs { display: flex; gap: 8px; padding: 10px 12px; overflow-x: auto; border-top: 1px solid var(--line); }
+.thumbs button { flex: none; width: 92px; height: 54px; padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: var(--surface); position: relative; }
+.thumbs button.on { border-color: var(--accent); }
+.thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumbs .ill { display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--accent); height: 100%; line-height: 1.1; text-align: center; padding: 4px; }
+
+.side { min-height: 0; overflow-y: auto; padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.side > * { flex-shrink: 0; }
+.lede { margin: 0; line-height: 1.55; color: var(--ink); max-width: 62ch; }
+.oiai-key { display: flex; gap: 6px; flex-wrap: wrap; font-size: 12px; }
+.oiai-key span { border-radius: 6px; padding: 2px 7px; font-weight: 700; font-family: var(--f-mono); }
+.k-o { background: color-mix(in srgb, var(--sup) 16%, transparent); color: var(--sup); }
+.k-i { background: color-mix(in srgb, var(--inf) 16%, transparent); color: var(--inf); }
+.k-a { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.k-n { background: color-mix(in srgb, var(--lab) 16%, transparent); color: var(--lab); }
+.mlist { display: grid; gap: 8px; }
+.mus { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.mus > button { width: 100%; text-align: left; background: none; border: 0; padding: 10px 12px; display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: baseline; }
+.mus .no { font-family: var(--f-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mus .nm { font-family: var(--f-latin); font-style: italic; font-size: 17px; font-weight: 500; }
+.mus .chev { color: var(--muted); transition: transform .2s; }
+.mus.open .chev { transform: rotate(90deg); }
+.mus .det { display: none; padding: 0 12px 12px 12px; }
+.mus.open .det { display: grid; gap: 10px; }
+.mus .desc { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.oiai { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; font-size: 13.5px; line-height: 1.45; margin: 0; }
+.oiai dt { font-family: var(--f-mono); font-weight: 700; font-size: 12px; border-radius: 6px; padding: 1px 6px; height: fit-content; text-align: center; min-width: 26px; }
+.oiai dd { margin: 0; min-width: 0; }
+.links { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; }
+.links a, .links button { color: var(--leaf); font-weight: 600; text-decoration: none; border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; background: none; }
+.links a:hover { border-color: var(--leaf); }
+.note { font-size: 12px; color: var(--muted); line-height: 1.45; margin: 0; }
+.rules { margin: 0; padding-left: 20px; display: grid; gap: 6px; line-height: 1.45; font-size: 14px; }
+.h3 { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 6px 0 0; }
+.boothlinks { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
+.boothlinks button { text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 7px 10px; font-size: 13px; display: flex; gap: 8px; align-items: center; min-width: 0; }
+.boothlinks button span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.boothlinks .c { font-family: var(--f-mono); font-size: 11px; color: #fff; border-radius: 5px; padding: 1px 5px; flex: none; }
+.boothlinks button.seen::after { content: "✓"; margin-left: auto; color: var(--leaf); font-weight: 700; }
+
+/* checklist */
+.prog { display: grid; gap: 6px; }
+.prog .bar { height: 8px; background: var(--line); border-radius: 8px; overflow: hidden; }
+.prog .bar i { display: block; height: 100%; background: var(--leaf); }
+.prog .lbl { display: flex; justify-content: space-between; font-size: 13px; font-variant-numeric: tabular-nums; }
+.ck-group { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.ck-group h4 { margin: 0; font-size: 12.5px; padding: 8px 12px; background: var(--surface-2); display: flex; justify-content: space-between; gap: 8px; }
+.ck-group h4 span { font-family: var(--f-mono); color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+.ck { display: grid; grid-template-columns: 34px 1fr; gap: 8px; align-items: center; padding: 6px 12px; border-top: 1px solid var(--line); font-size: 14px; cursor: pointer; }
+.ck input { width: 18px; height: 18px; accent-color: var(--leaf); }
+.ck .num { font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+.ck label { display: flex; gap: 10px; align-items: center; cursor: pointer; }
+.confirm { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+
+/* quiz */
+.qcard { border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 12px; background: var(--surface); }
+.qmeta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.qtext { margin: 0; font-size: 16px; line-height: 1.5; }
+.qimgwrap { border-radius: 10px; border: 1px solid var(--line); overflow: hidden; aspect-ratio: 16 / 7.6; max-width: 100%; background: #fff; }
+.qimg { width: 100%; display: block; margin-top: -8.2%; }
+.opts { display: grid; gap: 8px; }
+.opts button { text-align: left; border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-size: 14.5px; }
+.opts button.ok { border-color: var(--leaf); background: color-mix(in srgb, var(--leaf) 14%, var(--surface)); }
+.opts button.no { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.opts button:disabled { cursor: default; }
+.feedback { font-size: 14px; line-height: 1.5; margin: 0; }
+.scope { display: flex; gap: 6px; flex-wrap: wrap; }
+.scope button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 11px; font-size: 13px; font-weight: 600; }
+.scope button.on { background: var(--ink); color: var(--surface); }
+
+/* map */
+.mapwrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); min-height: 0; }
+.mapwrap canvas { width: 100%; height: 100%; display: block; cursor: pointer; background: var(--surface-2); }
+.mapside { overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+.mapside > * { flex-shrink: 0; }
+
+/* assistant drawer */
+#chat { position: absolute; z-index: 16; right: var(--gr); top: 64px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: min(400px, calc(100% - 32px));
+  background: var(--surface); color: var(--ink); border-radius: 18px; box-shadow: var(--shadow); display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+.chat-head { display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--leaf); color: #fff; display: grid; place-items: center; font-weight: 700; font-family: var(--f-mono); flex: none; }
+.chat-head b { display: block; } .chat-head small { color: var(--muted); font-size: 12px; }
+.chat-log { overflow-y: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
+.msg { max-width: 92%; padding: 9px 12px; border-radius: 14px; line-height: 1.5; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.msg.me { justify-self: end; background: var(--leaf); color: #fff; border-bottom-right-radius: 4px; }
+.msg.bot { justify-self: start; background: var(--surface-2); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.msg.bot b { font-weight: 700; }
+.chat-form { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
+.chat-form input { flex: 1; min-width: 0; border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+.sugg { display: flex; gap: 6px; flex-wrap: wrap; }
+.sugg button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; font-size: 12.5px; padding: 5px 10px; }
+
+#toast { position: absolute; left: 50%; top: 70px; transform: translateX(-50%); z-index: 30; background: var(--ink); color: var(--surface); padding: 9px 14px; border-radius: 10px; font-weight: 600; font-size: 14px; box-shadow: var(--shadow); max-width: calc(100% - 32px); }
+
+@media (max-width: 860px) {
+  .sheet { height: 100%; border-radius: 14px; }
+  .sheet-body, .mapwrap { grid-template-columns: 1fr; grid-template-rows: minmax(220px, 42%) 1fr; }
+  .viewer { border-right: 0; border-bottom: 1px solid var(--line); }
+  .thumbs { display: none; }
+  .tools { max-width: 62%; }
+  .tools .chip .lbl { display: none; }
+  #mini { width: 104px; height: 104px; }
+  .brand span:not(.zone) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div id="app">
+  <canvas id="stage" aria-label="Plaza 3D Miologi"></canvas>
+  <div id="labels"></div>
+  <div class="hud-top" id="hud" hidden>
+    <div class="brand"><b>Plaza Miologi</b><span>FKIK Universitas Mataram · <span class="zone" id="zone">Gerbang</span></span></div>
+    <div class="tools">
+      <button class="chip" id="bPlaza" title="Kembali ke plaza tengah">⌂ <span class="lbl">Plaza</span></button>
+      <button class="chip" id="bMap" title="Peta lokasi (M)">◎ <span class="lbl">Peta</span> <kbd>M</kbd></button>
+      <button class="chip" id="bSheet" title="Lembar kerja">☑ <span class="lbl">Lembar Kerja</span> <span class="n" id="ckN">0/116</span></button>
+      <button class="chip" id="bQuiz" title="Latihan ujian praktikum">? <span class="lbl">Kuis</span></button>
+      <button class="chip" id="bAch" title="Capaian bilik yang sudah dikunjungi">★ <span class="lbl">Capaian</span> <span class="n" id="achN">0/22</span></button>
+      <button class="chip accent" id="bChat" title="Tanya Mio, asisten miologi">✦ <span class="lbl">Tanya Mio</span></button>
+      <span class="chip" id="online" hidden title="Pengunjung yang sedang berada di plaza">● <span class="n" id="onN">1</span> <span class="lbl">di plaza</span></span>
+    </div>
+  </div>
+  <canvas id="mini" width="300" height="300" hidden title="Buka peta"></canvas>
+  <div id="joy" hidden></div>
+  <div id="prompt" hidden><span class="code" id="pCode">S1</span><span class="t" id="pT"></span><button id="pOpen">Buka bilik <span class="mono">E</span></button></div>
+  <div id="tip" hidden></div>
+  <div id="toast" hidden></div>
+
+  <div id="intro">
+    <div class="card" role="dialog" aria-labelledby="introTitle">
+      <div class="intro-head">
+        <small>Laboratorium Anatomi · FKIK Universitas Mataram</small>
+        <h1 id="introTitle">Plaza Miologi <em>extremitas superior et inferior</em></h1>
+        <p>Berjalanlah di plaza hijau kampus, kunjungi 22 bilik bertema regio, dan pelajari setiap otot dengan empat pertanyaan: Origo, Insersio, Aksi, Inervasi.</p>
+      </div>
+      <div class="intro-body">
+        <div class="namebar">
+          <label for="nameIn" class="fine" style="flex-basis:100%">Nama yang tampil di plaza</label>
+          <input id="nameIn" maxlength="24" placeholder="Contoh: Ayu — Blok 2.2" autocomplete="nickname">
+          <button class="btn" id="enter" disabled>Menyiapkan plaza…</button>
+        </div>
+        <div class="loadbar"><i id="loadI"></i></div>
+        <div class="legend">
+          <div><b><span class="sw" style="background:var(--intro)"></span>Pengantar · P1–P4</b>Outline, prinsip O-I-A-I, tata tertib, visi-misi, pustaka.</div>
+          <div><b><span class="sw" style="background:var(--sup)"></span>Superior · S1–S7</b>Sayap barat: thorax, brachium, antebrachium, manus.</div>
+          <div><b><span class="sw" style="background:var(--inf)"></span>Inferior · I1–I9</b>Sayap timur: femoris, gluteus, cruris, pedis.</div>
+          <div><b><span class="sw" style="background:var(--lab)"></span>Stasiun · L1–L2</b>Lembar kerja 116 struktur dan ruang ujian latihan.</div>
+        </div>
+        <div class="keys">
+          <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> berjalan</span>
+          <span><kbd>Shift</kbd> berlari</span>
+          <span>Seret layar untuk menoleh</span>
+          <span>Klik lantai untuk berjalan ke titik</span>
+          <span>Klik bilik atau <kbd>E</kbd> untuk membuka</span>
+          <span><kbd>M</kbd> peta lokasi</span>
+        </div>
+        <p class="fine">Materi: Buku Penuntun Praktikum Anatomi Otot (dr. Ida Lestari Harahap, M.Si; dr. Dyah Purnaning, Sp.OT) dan slide Anatomi Blok 2.2 (Muhammad Andi Andrian). Ringkasan O-I-A-I mengacu pada Moore &amp; Dalley, Clinically Oriented Anatomy. Ilustrasi peta regio dibuat khusus untuk aplikasi ini.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal" hidden></div>
+  <section id="chat" hidden aria-label="Tanya Mio">
+    <div class="chat-head"><div class="avatar">Mio</div><div style="flex:1;min-width:0"><b>Mio · Asisten Miologi</b><small id="chatMode">Menjawab dari materi praktikum</small></div><button class="x" id="chatX" aria-label="Tutup">×</button></div>
+    <div class="chat-log" id="chatLog"></div>
+    <form class="chat-form" id="chatForm"><input id="chatIn" placeholder="Tanyakan otot, origo, inervasi…" autocomplete="off"><button class="sbtn pri" id="chatSend">Kirim</button></form>
+  </section>
+</div>
+
+<script src="data.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+
+</body></html>
